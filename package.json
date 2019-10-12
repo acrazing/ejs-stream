@@ -18,11 +18,11 @@
   ],
   "scripts": {
     "build": "run-s clean && run-p build:cjs build:esm && run-s build:esm:rename build:cjs:rename",
-    "build:cjs": "tsc --outDir cjs --module commonjs -p tsconfig.build.json",
+    "build:cjs": "tsc --outDir cjs --module commonjs --target es2015",
     "build:cjs:rename": "run-p build:cjs:rename:js build:cjs:rename:map",
     "build:cjs:rename:js": "find ./cjs -type f -name '*.js' | sed -E 's/^\\.\\/cjs\\/(.+)$/\\1/' | xargs -I % mv ./cjs/% ./lib/%",
     "build:cjs:rename:map": "find ./cjs -type f -name '*.js.map' | sed -E 's/^\\.\\/cjs\\/(.+)$/\\1/' | xargs -I % mv ./cjs/% ./lib/%",
-    "build:esm": "tsc --outDir lib --module esnext --declaration -p tsconfig.build.json",
+    "build:esm": "tsc --outDir lib --module esnext --declaration",
     "build:esm:rename": "run-p build:esm:rename:js build:esm:rename:map",
     "build:esm:rename:js": "find ./lib -type f -name '*.js' | sed -E 's/^(.+)\\.js$/\\1/' | xargs -I % mv %.js %.mjs",
     "build:esm:rename:map": "find ./lib -type f -name '*.js.map' | sed -E 's/^(.+)\\.js\\.map$/\\1/' | xargs -I % mv %.js.map %.mjs.map",
