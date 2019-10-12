@@ -1,0 +1,107 @@
+{
+  "name": "ejs-stream2",
+  "version": "1.0.0",
+  "description": "A nodejs stream template renderer based on ejs syntax",
+  "author": "acrazing <joking.young@gmail.com>",
+  "main": "lib/index.js",
+  "module": "lib/index.mjs",
+  "types": "lib/index.d.ts",
+  "files": [
+    "assets/",
+    "lib/",
+    "src/"
+  ],
+  "sideEffects": [
+    "*.css",
+    "*.less",
+    "*.scss"
+  ],
+  "scripts": {
+    "build": "run-s clean && run-p build:cjs build:esm && run-s build:esm:rename build:cjs:rename",
+    "build:cjs": "tsc --outDir cjs --module commonjs -p tsconfig.build.json",
+    "build:cjs:rename": "run-p build:cjs:rename:js build:cjs:rename:map",
+    "build:cjs:rename:js": "find ./cjs -type f -name '*.js' | sed -E 's/^\\.\\/cjs\\/(.+)$/\\1/' | xargs -I % mv ./cjs/% ./lib/%",
+    "build:cjs:rename:map": "find ./cjs -type f -name '*.js.map' | sed -E 's/^\\.\\/cjs\\/(.+)$/\\1/' | xargs -I % mv ./cjs/% ./lib/%",
+    "build:esm": "tsc --outDir lib --module esnext --declaration -p tsconfig.build.json",
+    "build:esm:rename": "run-p build:esm:rename:js build:esm:rename:map",
+    "build:esm:rename:js": "find ./lib -type f -name '*.js' | sed -E 's/^(.+)\\.js$/\\1/' | xargs -I % mv %.js %.mjs",
+    "build:esm:rename:map": "find ./lib -type f -name '*.js.map' | sed -E 's/^(.+)\\.js\\.map$/\\1/' | xargs -I % mv %.js.map %.mjs.map",
+    "clean": "rm -rf cjs esm lib build temp .cache",
+    "prepublishOnly": "run-s test build",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:acrazing/ejs-stream.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "husky": "^3.0.8",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.4.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.18.2",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.6.4"
+  },
+  "dependencies": {
+    "@types/node": "^12.7.12",
+    "is-stream": "^2.0.0",
+    "monofile-utilities": "^4.5.1",
+    "tslib": "^1.10.0"
+  },
+  "cliVersion": "8.9.0",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,less,scss,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "printWidth": 80,
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "jsxSingleQuote": false,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "jsxBracketSameLine": false,
+    "arrowParens": "always",
+    "endOfLine": "lf"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node",
+      "mjs"
+    ],
+    "cacheDirectory": ".cache/jest",
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "<rootDir>/src/**/*.{ts,tsx}",
+      "!**/*.d.ts"
+    ],
+    "coverageDirectory": "temp/coverage",
+    "globals": {
+      "__DEV__": true,
+      "ENV": {}
+    },
+    "testMatch": [
+      "<rootDir>/src/**/*.spec.{ts,tsx}"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    }
+  }
+}
