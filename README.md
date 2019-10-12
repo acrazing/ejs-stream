@@ -3,8 +3,8 @@
 A nodejs stream template renderer based on ejs syntax.
 
 The library [ejs](https://github.com/mde/ejs) supports `string` only to output,
-but we need to output stream sometimes. For example, with `React`'s
-`renderToNodeStream` API. This library makes it possible.
+but we need to output stream sometimes(see [#102](https://github.com/mde/ejs/issues/102)).
+For example, with `React`'s`renderToNodeStream` API. This library makes it possible.
 
 ## Install
 
