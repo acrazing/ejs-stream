@@ -19,7 +19,12 @@ describe('AsyncReadableStream', () => {
       sleep(1).then(() => 'array-promise'),
       createReadable(2, 'array-readable-'),
     ]);
+    asyncReadable.pushChunk(undefined!);
+    asyncReadable.pushChunk('between-nullable');
+    asyncReadable.pushChunk(null!);
+    asyncReadable.pushChunk([null!, undefined!, 'with-nullable']);
     asyncReadable.pushChunk('final-string');
+    asyncReadable.end();
     const chunks = await resolveReadable(asyncReadable);
     expect(chunks).toEqual([
       'string',
@@ -31,6 +36,8 @@ describe('AsyncReadableStream', () => {
       'array-promise',
       'array-readable-2',
       'array-readable-1',
+      'between-nullable',
+      'with-nullable',
       'final-string',
     ]);
   });

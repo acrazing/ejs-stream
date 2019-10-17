@@ -37,7 +37,10 @@ function stripSemi(str: string) {
   return str.replace(/;(\s*$)/, '$1');
 }
 
-export interface TemplateOptions {}
+export interface TemplateOptions {
+  async: boolean;
+  defer: boolean;
+}
 
 enum MODE {
   EVAL = 'eval',
@@ -56,9 +59,11 @@ export class Template<T extends object> {
   dependencies: any[];
   opts: TemplateOptions;
 
-  constructor(text: string, opts?: Partial<TemplateOptions>) {
-    opts = opts || {};
-    this.opts = {} as TemplateOptions;
+  constructor(text: string, options: Partial<TemplateOptions> = {}) {
+    this.opts = {
+      async: options.async || false,
+      defer: options.defer || false,
+    };
     this.templateText = text;
     this.mode = null;
     this.truncate = false;
@@ -75,16 +80,38 @@ export class Template<T extends object> {
     if (!this.source) {
       this.generateSource();
       prepended +=
-        '  let __output = new AsyncReadableStream(), __append = __output.pushChunk.bind(__output);' +
-        '\n';
-      prepended += '  with (' + LOCALS_NAME + ' || {}) {' + '\n';
-      appended += '  }' + '\n';
-      appended += '  return __output;' + '\n';
+        '  let __output = new AsyncReadableStream(), __append = __output.pushChunk.bind(__output);\n';
+      if (this.opts.defer) {
+        prepended += `  setTimeout(${this.opts.async ? 'async ' : ''}() => {\n`;
+      }
+      prepended += '  with (' + LOCALS_NAME + ' || {}) {\n';
+      appended += '  }\n';
+      appended += '  __output.end();\n';
+      if (this.opts.defer) {
+        appended += '  }, 0);\n';
+      }
+      appended += '  return __output;\n';
       this.source = prepended + this.source + appended;
     }
 
+    let ctor: any;
+    if (this.opts.async) {
+      // Have to use generated function for this, since in envs without support,
+      // it breaks in parsing
+      try {
+        ctor = new Function('return (async function(){}).constructor;')();
+      } catch (e) {
+        if (e instanceof SyntaxError) {
+          throw new Error('This environment does not support async/await');
+        } else {
+          throw e;
+        }
+      }
+    } else {
+      ctor = Function;
+    }
     try {
-      fn = new Function(
+      fn = new ctor(
         LOCALS_NAME,
         'escapeFn',
         'AsyncReadableStream',
