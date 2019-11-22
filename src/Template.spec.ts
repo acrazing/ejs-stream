@@ -3,9 +3,8 @@
  * @since 2019-10-12 13:50:36
  */
 
-import { sleep } from 'monofile-utilities/lib/sleep';
 import { render } from './Template';
-import { createReadable, resolveReadable } from './utils';
+import { createReadable, resolveReadable, sleep } from './utils';
 
 describe('Template', () => {
   it('should render as expected', async () => {

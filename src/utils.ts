@@ -3,8 +3,11 @@
  * @since 2019-10-12 14:18:46
  */
 
-import { sleep } from 'monofile-utilities/lib/sleep';
 import { Readable } from 'stream';
+
+export function sleep(timeout: number) {
+  return new Promise<void>((resolve) => setTimeout(resolve, timeout));
+}
 
 /** @internal */
 export function createReadable(readCount = 3, prefix = 'readable-') {

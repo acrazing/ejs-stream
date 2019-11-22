@@ -1,6 +1,6 @@
 {
   "name": "ejs-stream2",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A nodejs stream template renderer based on ejs syntax",
   "author": "acrazing <joking.young@gmail.com>",
   "main": "lib/index.js",
@@ -48,7 +48,6 @@
   "dependencies": {
     "@types/node": "^12.7.12",
     "is-stream": "^2.0.0",
-    "monofile-utilities": "^4.5.1",
     "tslib": "^1.10.0"
   },
   "cliVersion": "8.9.0",

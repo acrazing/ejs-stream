@@ -3,9 +3,8 @@
  * @since 2019-10-10 12:25:48
  */
 
-import { sleep } from 'monofile-utilities/lib/sleep';
 import { AsyncReadableStream } from './AsyncReadableStream';
-import { createReadable, resolveReadable } from './utils';
+import { createReadable, resolveReadable, sleep } from './utils';
 
 describe('AsyncReadableStream', () => {
   it('should process chunks correctly', async () => {
