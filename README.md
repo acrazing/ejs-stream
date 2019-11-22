@@ -15,7 +15,7 @@ npm, for `ejs-stream` is occupied by another people.
 npm install ejs-stream2
 
 # or var yarn
-yarn install ejs-stream2
+yarn add ejs-stream2
 ```
 
 ## Usage
