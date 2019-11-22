@@ -1,5 +1,5 @@
 /*!
- * Copyright 2018 yangjunbao <yangjunbao@shimo.im>. All rights reserved.
+ * Copyright 2018 acrazing <joking.young@gmail.com>. All rights reserved.
  * @since 2018-12-11 15:08:06
  */
 
